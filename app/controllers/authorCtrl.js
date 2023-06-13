@@ -1,3 +1,5 @@
+const Author = require('../models/Author');
+
 const getAuthors = (req, res) => {
   res
     .status(200)
@@ -13,10 +15,11 @@ const getAuthorById = (req, res) => {
   });
 };
 
-const createAuthor = (req, res) => {
+const createAuthor = async (req, res) => {
   const { author } = req.body;
+  const authorData = await Author.create(author);
   res.status(200).json({
-    data: author,
+    data: authorData,
     success: true,
     message: `${req.method} - Author request made`,
   });
