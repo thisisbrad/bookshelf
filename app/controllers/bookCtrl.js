@@ -1,12 +1,13 @@
+const Book = require('../models/Book');
 const Author = require('../models/Author');
 
-const getAuthors = async (req, res) => {
+const getBooks = async (req, res) => {
   try {
-    const authors = await Author.find();
+    const books = await Book.find();
     res.status(200).json({
-      data: authors,
+      data: books,
       success: true,
-      message: `${req.method} - Author request made`,
+      message: `${req.method} - Book request made`,
     });
   } catch ({ message }) {
     res.status(500).json({
@@ -16,21 +17,21 @@ const getAuthors = async (req, res) => {
   }
 };
 
-const getAuthorById = async (req, res) => {
+const getBookById = async (req, res) => {
   try {
     const { id } = req.params;
-    const author = await Author.findById(id);
+    const book = await Book.findById(id).populate('author');
 
-    if (!author) {
+    if (!book) {
       return res
         .status(400)
-        .json({ success: false, message: 'Author not found' });
+        .json({ success: false, message: 'Book not found' });
     }
 
     res.status(200).json({
-      data: author,
+      data: book,
       success: true,
-      message: `${req.method} - Author request made`,
+      message: `${req.method} - Book request made`,
     });
   } catch ({ message }) {
     res.status(500).json({
@@ -40,14 +41,25 @@ const getAuthorById = async (req, res) => {
   }
 };
 
-const createAuthor = async (req, res) => {
+const createBook = async (req, res) => {
   try {
-    const { author } = req.body;
-    const authorData = await Author.create(author);
+    const { book } = req.body;
+    // const bookData = await Book.create(book);
+    const user = await Author.findById(book.author);
+    book.author = user;
+    const bookData = new Book(book);
+    user.books.push(bookData._id);
+
+    const queries = [bookData.save(), user.save()];
+    await Promise.all(queries);
+
+    // const { author, ...bookOnly } = bookData._doc;
+    // console.log('>>>', bookOnly);
+
     res.status(200).json({
-      data: authorData,
+      data: bookData,
       success: true,
-      message: `${req.method} - Author request made`,
+      message: `${req.method} - Book request made`,
     });
   } catch ({ message }) {
     res.status(500).json({
@@ -57,22 +69,22 @@ const createAuthor = async (req, res) => {
   }
 };
 
-const updateAuthor = async (req, res) => {
+const updateBook = async (req, res) => {
   try {
     const { id } = req.params;
-    const author = await Author.findByIdAndUpdate(id, req.body, {
+    const book = await Book.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     });
 
-    if (!author) {
+    if (!book) {
       return res.status(400).json({ success: false });
     }
 
     res.status(200).json({
-      data: author,
+      data: book,
       success: true,
-      message: `${req.method} - Author request made`,
+      message: `${req.method} - Book request made`,
     });
   } catch ({ message }) {
     res.status(500).json({
@@ -82,14 +94,14 @@ const updateAuthor = async (req, res) => {
   }
 };
 
-const deleteAuthor = async (req, res) => {
+const deleteBook = async (req, res) => {
   try {
     const { id } = req.params;
-    await Author.findByIdAndDelete(id);
+    await Book.findByIdAndDelete(id);
     res.status(200).json({
       id,
       success: true,
-      message: `${req.method} - Author request made`,
+      message: `${req.method} - Book request made`,
     });
   } catch ({ message }) {
     res.status(500).json({
@@ -100,9 +112,9 @@ const deleteAuthor = async (req, res) => {
 };
 
 module.exports = {
-  getAuthors,
-  getAuthorById,
-  createAuthor,
-  updateAuthor,
-  deleteAuthor,
+  getBooks,
+  getBookById,
+  createBook,
+  updateBook,
+  deleteBook,
 };

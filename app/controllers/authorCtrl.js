@@ -19,7 +19,13 @@ const getAuthors = async (req, res) => {
 const getAuthorById = async (req, res) => {
   try {
     const { id } = req.params;
-    const author = await Author.findById(id);
+    const { books } = req.query;
+    let author;
+    if (books === 'true') {
+      author = await Author.findById(id).populate('books');
+    } else {
+      author = await Author.findById(id);
+    }
 
     if (!author) {
       return res
