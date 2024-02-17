@@ -2,7 +2,27 @@ const Author = require("../models/Author");
 const mongoose = require("mongoose");
 
 const getAuthors = async (req, res) => {
-  const authors = await Author.find();
+  let queryString = JSON.stringify(req.query);
+
+  queryString = queryString.replace(
+    /\b(gt|gte|lt|lte)\b/g,
+    (match) => `$${match}`
+  );
+  // parse the JSON back
+  queryString = JSON.parse(queryString);
+
+  console.log("query", queryString);
+
+  const authors = await Author.find(queryString);
+
+  if (Array.isArray(authors) && authors.length === 0) {
+    res.status(404).json({
+      error: "Not Found",
+      success: false,
+      message: "No Authors found with that citeria",
+    });
+  }
+
   res.status(200).json({
     data: authors,
     success: true,
