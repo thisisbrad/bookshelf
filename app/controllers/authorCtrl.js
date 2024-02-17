@@ -20,13 +20,20 @@ const getAuthorById = async (req, res) => {
 };
 
 const createAuthor = async (req, res) => {
-  const { author } = req.body;
-  const authorData = await Author.create(author);
-  res.status(201).json({
-    data: authorData,
-    success: true,
-    message: `${req.method} - Author request made`,
-  });
+  try {
+    const { author } = req.body;
+    const newAuthor = await Author.create(author);
+    res.status(200).json({
+      data: newAuthor,
+      status: "success",
+      message: `${req.method} - Author request made`,
+    });
+  } catch ({ message }) {
+    res.status(400).json({
+      status: "fail",
+      message,
+    });
+  }
 };
 
 const updateAuthor = async (req, res) => {
