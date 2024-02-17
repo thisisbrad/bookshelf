@@ -24,7 +24,7 @@ const createAuthor = async (req, res) => {
   try {
     const { author } = req.body;
     const newAuthor = await Author.create(author);
-    res.status(200).json({
+    res.status(201).json({
       data: newAuthor,
       status: "success",
       message: `${req.method} - Author request made`,
@@ -33,19 +33,6 @@ const createAuthor = async (req, res) => {
     console.error(error);
     // Check if the error is a Mongoose validation error or a duplicate key error
     if (error instanceof mongoose.Error.ValidationError) {
-      // || error.code === 11000
-      // For duplicate key error (code 11000), customize the error message
-      // if (error.code === 11000) {
-      //   throw new ValidationError({
-      //     errors: {
-      //       name: {
-      //         message: "Author must be unique.",
-      //       },
-      //     },
-      //   });
-      // }
-      // console.log("ERRORS???", error.errors);
-      // Extract validation error messages
       const validationErrors = Object.values(error.errors).map(
         (error) => error.message
       );
@@ -56,10 +43,10 @@ const createAuthor = async (req, res) => {
         details: validationErrors,
       });
     }
-    res.status(422).json({
+    res.status(500).json({
       success: false,
-      error: "Validation failed",
-      details: error.message,
+      error: "Internal Server Error",
+      message: error.message,
     });
   }
 };
