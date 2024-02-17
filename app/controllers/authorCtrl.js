@@ -31,20 +31,29 @@ const createAuthor = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    if (error instanceof mongoose.Error.ValidationError) {
+    // Check if the error is a Mongoose validation error or a duplicate key error
+    if (
+      error instanceof mongoose.Error.ValidationError ||
+      error.code === 11000
+    ) {
+      // For duplicate key error (code 11000), customize the error message
+      // console.log("????", error.keyValue);
+      if (error.code === 11000) {
+        throw new mongoose.Error.ValidationError({
+          errors: {
+            name: {
+              message: "Author must be unique.",
+            },
+          },
+        });
+      }
+      console.log("ERRORS???", error.errors);
       // Extract validation error messages
       const validationErrors = Object.values(error.errors).map(
         (error) => error.message
       );
       console.log("Validation errors:", validationErrors);
-    } else {
-      // Handle other types of errors
-      console.error("Error:", error.message);
     }
-    // res.status(400).json({
-    //   status: "fail",
-    //   message: error.message,
-    // });
   }
 };
 
