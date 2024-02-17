@@ -8,12 +8,20 @@ const getAuthors = async (req, res) => {
     /\b(gt|gte|lt|lte)\b/g,
     (match) => `$${match}`
   );
-  // parse the JSON back
-  queryString = JSON.parse(queryString);
-
   console.log("query", queryString);
 
-  const authors = await Author.find(queryString);
+  // parse the JSON back and make query if it's missing
+  // let query = queryString
+  //   ? Author.find(JSON.parse(queryString))
+  //   : Author.find({});
+  let query = Author.find(JSON.parse(queryString));
+
+  if (req.query.select) {
+    const fields = req.query.select.split(",").join(" ");
+    query = Author.find({}).select(fields);
+  }
+
+  const authors = await query;
 
   if (Array.isArray(authors) && authors.length === 0) {
     res.status(404).json({
