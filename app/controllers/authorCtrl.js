@@ -14,6 +14,10 @@ const getAuthors = async (req, res) => {
   // let query = queryString
   //   ? Author.find(JSON.parse(queryString))
   //   : Author.find({});
+  // Need logic for removing select from query string
+  // leaving just gt|lt to be worked with.
+  // then conditional the select capture variable
+  // split it then add it to select
   let query = Author.find(JSON.parse(queryString));
 
   if (req.query.select) {
