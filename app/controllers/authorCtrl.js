@@ -1,4 +1,5 @@
 const Author = require("../models/Author");
+const mongoose = require("mongoose");
 
 const getAuthors = async (req, res) => {
   const authors = await Author.find();
@@ -28,11 +29,22 @@ const createAuthor = async (req, res) => {
       status: "success",
       message: `${req.method} - Author request made`,
     });
-  } catch ({ message }) {
-    res.status(400).json({
-      status: "fail",
-      message,
-    });
+  } catch (error) {
+    console.error(error);
+    if (error instanceof mongoose.Error.ValidationError) {
+      // Extract validation error messages
+      const validationErrors = Object.values(error.errors).map(
+        (error) => error.message
+      );
+      console.log("Validation errors:", validationErrors);
+    } else {
+      // Handle other types of errors
+      console.error("Error:", error.message);
+    }
+    // res.status(400).json({
+    //   status: "fail",
+    //   message: error.message,
+    // });
   }
 };
 
