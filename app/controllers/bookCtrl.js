@@ -1,5 +1,5 @@
-const Book = require('../models/Book');
-const Author = require('../models/Author');
+const Book = require("../models/Book");
+const Author = require("../models/Author");
 
 const getBooks = async (req, res) => {
   try {
@@ -20,12 +20,12 @@ const getBooks = async (req, res) => {
 const getBookById = async (req, res) => {
   try {
     const { id } = req.params;
-    const book = await Book.findById(id).populate('author');
+    const book = await Book.findById(id).populate("author");
 
     if (!book) {
       return res
         .status(400)
-        .json({ success: false, message: 'Book not found' });
+        .json({ success: false, message: "Book not found" });
     }
 
     res.status(200).json({
@@ -43,13 +43,18 @@ const getBookById = async (req, res) => {
 
 const createBook = async (req, res) => {
   try {
-    const { book } = req.body;
     // const bookData = await Book.create(book);
+    const { book } = req.body;
+    // book.author > is the _id for the author model;
+    // '648a0bcb7124454bedaa5b97' > is the _id for the author model;
     const user = await Author.findById(book.author);
+    // attaching the actual author object to the book
     book.author = user;
+    // creates a new book model
     const bookData = new Book(book);
+    // push the book id to the user.books array
     user.books.push(bookData._id);
-
+    // saves the book and user data
     const queries = [bookData.save(), user.save()];
     await Promise.all(queries);
 

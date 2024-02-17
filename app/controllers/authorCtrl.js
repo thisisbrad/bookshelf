@@ -1,6 +1,7 @@
-const Author = require('../models/Author');
+const Author = require("../models/Author");
 
 const getAuthors = async (req, res) => {
+  console.log("WOW");
   try {
     const authors = await Author.find();
     res.status(200).json({
@@ -21,16 +22,16 @@ const getAuthorById = async (req, res) => {
     const { id } = req.params;
     const { books } = req.query;
     let author;
-    if (books === 'true') {
-      author = await Author.findById(id).populate('books');
+    if (books === "true") {
+      author = await Author.findById(id).populate("books");
     } else {
       author = await Author.findById(id);
     }
-
+    console.log(">>>", author);
     if (!author) {
       return res
         .status(400)
-        .json({ success: false, message: 'Author not found' });
+        .json({ success: false, message: "Author not found" });
     }
 
     res.status(200).json({
@@ -50,7 +51,7 @@ const createAuthor = async (req, res) => {
   try {
     const { author } = req.body;
     const authorData = await Author.create(author);
-    res.status(200).json({
+    res.status(201).json({
       data: authorData,
       success: true,
       message: `${req.method} - Author request made`,
