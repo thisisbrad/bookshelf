@@ -20,14 +20,26 @@ const getAuthors = async (req, res) => {
   // split it then add it to select
   let query = Author.find(JSON.parse(queryString));
 
+  // select certain properties
   if (req.query.select) {
     const fields = req.query.select.split(",").join(" ");
     query = Author.find({}).select(fields);
   }
 
+  // sort acc or desc
   if (req.query.sort) {
     const sortBy = req.query.sort.split(",").join(" ");
     query = Author.find({}).sort(sortBy);
+  }
+
+  // pagination
+  if (req.query.page) {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 2;
+    const skip = (page - 1) * limit;
+    console.log("skip", skip);
+    console.log("limit", limit);
+    query = Author.find({}).skip(skip).limit(limit);
   }
 
   const authors = await query;
