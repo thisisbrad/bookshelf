@@ -25,6 +25,11 @@ const getAuthors = async (req, res) => {
     query = Author.find({}).select(fields);
   }
 
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(",").join(" ");
+    query = Author.find({}).sort(sortBy);
+  }
+
   const authors = await query;
 
   if (Array.isArray(authors) && authors.length === 0) {
