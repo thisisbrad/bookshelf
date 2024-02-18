@@ -34,46 +34,11 @@ describe("getAuthors controller", () => {
       { name: "Author 2", createdAt: new Date() },
     ];
 
-    // Mock the find method with a chainable object
-    // Author.find.mockReturnValue({
-    //   select: jest.fn().mockReturnValue({
-    //     sort: jest.fn().mockReturnValue({
-    //       skip: jest.fn().mockReturnValue({
-    //         limit: jest.fn().mockResolvedValue(mockAuthorsData),
-    //       }),
-    //     }),
-    //   }),
-    // });
-    // Author.find = jest.fn().mockImplementationOnce(() => ({
-    //   select: jest.fn().mockResolvedValue({ name: "bob" }),
-    // }));
-
-    Author.find.mockReturnValue({
-      select: jest.fn().mockReturnValue({
-        sort: jest.fn().mockReturnValue({
-          skip: jest.fn().mockReturnValue({
-            limit: jest.fn().mockResolvedValue(mockAuthorsData),
-          }),
-        }),
-      }),
-    });
-
-    // Author.find.mockReturnValue(Author);
-
-    // // Mock the select, sort, skip, and limit methods
-    // Author.select.mockReturnValue(Author);
-    // Author.sort.mockReturnValue(Author);
-    // Author.skip.mockReturnValue(Author);
-    // Author.limit.mockResolvedValue(mockAuthorsData);
-
     const res = mockResponse();
 
     await getAuthors(mockRequest, res);
 
     // Assertions
-    // expect(Author.find).toHaveBeenCalledWith({
-    //   createdAt: { $gte: expect.any(Date) }, // Adjust based on your actual query transformations
-    // });
     expect(Author.find().select).toHaveBeenCalledWith("name");
     // expect(Author.find().sort).toHaveBeenCalledWith("createdAt");
     // expect(Author.find().skip).toHaveBeenCalledWith(0);
