@@ -6,6 +6,7 @@
     "morgan": "^1.10.0"
   },
   "scripts": {
+    "test": "jest",
     "start": "NODE_ENV=production node server.js",
     "dev": "NODE_ENV=development nodemon server.js"
   },
