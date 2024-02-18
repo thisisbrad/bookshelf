@@ -18,18 +18,15 @@ jest.mock("../models/Author", () => ({
 
 describe("getAuthors controller", () => {
   afterEach(() => {
+    jest.restoreAllMocks();
     jest.resetAllMocks();
   });
 
-  it("should respond with authors data", async () => {
+  it("should respond with authors data with just the name property", async () => {
     // Mock the request object
     const mockRequest = {
       query: { select: "name" },
     };
-
-    // const mockRequest = {
-    //   query: { select: "name", sort: "createdAt", page: 1, limit: 2 },
-    // };
 
     // Mock the data returned by the Author model
     const mockAuthorsData = [
@@ -37,14 +34,37 @@ describe("getAuthors controller", () => {
       { name: "Author 2", createdAt: new Date() },
     ];
 
-    const queryMock = {
-      select: jest.fn().mockReturnThis(), // This is the correction
-      sort: jest.fn().mockReturnThis(),
-      skip: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockResolvedValue(mockAuthorsData),
-    };
+    // Mock the find method with a chainable object
+    // Author.find.mockReturnValue({
+    //   select: jest.fn().mockReturnValue({
+    //     sort: jest.fn().mockReturnValue({
+    //       skip: jest.fn().mockReturnValue({
+    //         limit: jest.fn().mockResolvedValue(mockAuthorsData),
+    //       }),
+    //     }),
+    //   }),
+    // });
+    // Author.find = jest.fn().mockImplementationOnce(() => ({
+    //   select: jest.fn().mockResolvedValue({ name: "bob" }),
+    // }));
 
-    Author.find.mockReturnValue(queryMock);
+    Author.find.mockReturnValue({
+      select: jest.fn().mockReturnValue({
+        sort: jest.fn().mockReturnValue({
+          skip: jest.fn().mockReturnValue({
+            limit: jest.fn().mockResolvedValue(mockAuthorsData),
+          }),
+        }),
+      }),
+    });
+
+    // Author.find.mockReturnValue(Author);
+
+    // // Mock the select, sort, skip, and limit methods
+    // Author.select.mockReturnValue(Author);
+    // Author.sort.mockReturnValue(Author);
+    // Author.skip.mockReturnValue(Author);
+    // Author.limit.mockResolvedValue(mockAuthorsData);
 
     const res = mockResponse();
 
