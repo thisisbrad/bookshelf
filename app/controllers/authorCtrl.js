@@ -8,16 +8,7 @@ const getAuthors = async (req, res) => {
     /\b(gt|gte|lt|lte)\b/g,
     (match) => `$${match}`
   );
-  console.log("query", queryString);
 
-  // parse the JSON back and make query if it's missing
-  // let query = queryString
-  //   ? Author.find(JSON.parse(queryString))
-  //   : Author.find({});
-  // Need logic for removing select from query string
-  // leaving just gt|lt to be worked with.
-  // then conditional the select capture variable
-  // split it then add it to select
   let query = Author.find(JSON.parse(queryString));
 
   // select certain properties
