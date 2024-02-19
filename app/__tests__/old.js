@@ -12,11 +12,6 @@ const mockResponse = () => {
 };
 
 describe("Your test suite", () => {
-  afterEach(() => {
-    jest.restoreAllMocks();
-    jest.resetAllMocks();
-  });
-
   it("should mock chained function", async () => {
     // Mock the chained function 'select' on the model instance
     const mockSelect = jest
@@ -25,8 +20,10 @@ describe("Your test suite", () => {
     const mockFind = jest
       .spyOn(Author, "find")
       .mockReturnValueOnce({ select: mockSelect });
-    // Assertion or further test logic based on the mocked data
 
+    // Your test logic here
+
+    // For example:
     const mockRequest = {
       query: { select: "name" },
     };
@@ -36,15 +33,34 @@ describe("Your test suite", () => {
     const res = mockResponse();
 
     const result = await getAuthors(mockRequest, res);
+    // const result = await Author.find().select("field1 field2");
+
+    // Assertion or further test logic based on the mocked data
+
     // Log to check if the mock is being called
     console.log(mockFind.mock.calls);
     console.log(mockSelect.mock.calls);
+
     // Log to check if the result is as expected
     console.log(result);
+
     // Restore the original method after the test
-    // mockFind.mockRestore();
+    mockFind.mockRestore();
   });
 });
+
+// // Mock the response object
+// const mockResponse = () => {
+//   const res = {};
+//   res.json = jest.fn().mockReturnValue(res);
+//   res.status = jest.fn().mockReturnValue(res);
+//   return res;
+// };
+
+// // Mock the Author model's find method
+// jest.mock("../models/Author", () => ({
+//   find: jest.fn(),
+// }));
 
 // describe("getAuthors controller", () => {
 //   afterEach(() => {
