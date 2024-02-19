@@ -32,7 +32,6 @@ const getAuthors = async (req, res) => {
   }
 
   const authors = await query;
-  console.log("GOT EM", authors);
 
   if (Array.isArray(authors) && authors.length === 0) {
     return res.status(404).json({
@@ -62,9 +61,7 @@ const getAuthorById = async (req, res) => {
 const createAuthor = async (req, res) => {
   try {
     const { author } = req.body;
-    console.log(">>>", author);
     const newAuthor = await Author.create(author);
-    console.log(">>>", newAuthor);
     res.status(201).json({
       data: newAuthor,
       status: "success",
