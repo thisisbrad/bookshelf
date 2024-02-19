@@ -40,7 +40,7 @@ const getAuthors = async (req, res) => {
       message: "No Authors found with that citeria",
     });
   }
-
+  console.log("NOT TEST?", authors);
   res.status(200).json({
     data: authors,
     success: true,
