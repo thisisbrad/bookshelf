@@ -34,14 +34,14 @@ const getAuthors = async (req, res) => {
   const authors = await query;
 
   if (Array.isArray(authors) && authors.length === 0) {
-    res.status(404).json({
+    return res.status(404).json({
       error: "Not Found",
       success: false,
       message: "No Authors found with that citeria",
     });
   }
-  console.log("NOT TEST?", authors);
-  res.status(200).json({
+
+  return res.status(200).json({
     data: authors,
     success: true,
     message: `${req.method} - Author request made`,
@@ -75,13 +75,13 @@ const createAuthor = async (req, res) => {
         (error) => error.message
       );
       console.log("Validation errors:", validationErrors);
-      res.status(422).json({
+      return res.status(422).json({
         success: false,
         error: "Validation failed",
         details: validationErrors,
       });
     }
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: "Internal Server Error",
       message: error.message,
