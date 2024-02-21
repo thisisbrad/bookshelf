@@ -2,21 +2,21 @@ const request = require("supertest");
 const app = require("../index");
 const Author = require("../models/Author");
 
-// beforeAll(async () => {
-//   await mongoose.connect(process.env.MONGO_TEST_URI);
-// });
+// beforeAll(async () => {});
+
+beforeEach(async () => {
+  const author = await Author.create({
+    name: "Ryan Holiday",
+    age: 36,
+    description: "lorem",
+  });
+});
 
 afterEach(async () => {
-  const { collections } = mongoose.connection;
-  for (const key in collections) {
-    const collection = collections[key];
-    await collection.dropMany();
-  }
+  await Author.deleteMany();
 });
 
 // afterAll(async () => {
-//   await mongoose.connection.dropDatabase();
-//   await mongoose.connection.close();
 // });
 
 describe("GET /users", function () {
