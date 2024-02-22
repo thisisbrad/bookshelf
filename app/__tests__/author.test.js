@@ -7,7 +7,7 @@ const Author = require("../models/Author");
 beforeEach(async () => {
   await Author.create({
     name: "Ryan Holiday",
-    age: 36,
+    age: 35,
     description: "lorem",
   });
   await Author.create({
@@ -37,9 +37,9 @@ describe("GET /users", function () {
     // expect(response.body.email).toEqual("foo@bar.com");
   });
 
-  it("responds with authors between 30-50", async function () {
+  it("responds with authors between 30-35", async function () {
     const response = await request(app)
-      .get("/api/v1/authors?age[gt]=30&age[lt]=50")
+      .get("/api/v1/authors?age[gt]=30&age[lte]=35")
       .set("Accept", "application/json");
 
     // console.log("Response:", response.header); // Add this line for debugging
