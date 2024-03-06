@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import SearchBar from "./components/SearchBar";
+import AuthorList from "./components/AuthorList";
+import API from "./API";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [authors, setAuthors] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Perform your asynchronous operation here, for example, a fetch request
+        const response = await API.fetchAuthors();
+        // Update state with the fetched data
+        setAuthors(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Handle errors here, you might want to set an error state or show a message to the user
+      }
+    };
+
+    // Call the async function
+    fetchData();
+  },[])
+
+  const handleSearch = async event => {
+    event.preventDefault();
+    console.log("Search button clicked!", event.target.search.value);
+    const response = await API.fetchAuthors();
+    // console.log("From our API!", response.data);
+    setAuthors(response.data)
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Author Search</h1>
+      <SearchBar onSubmit={handleSearch} />
+      <AuthorList authors={authors}/>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
