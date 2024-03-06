@@ -1,7 +1,7 @@
 import "react";
 
-function AuthorList({authors}) {
-    console.log("props", authors);
+function AuthorList({ authors, handleDelete }) {
+    // console.log("props", props);
 
   return (
     <>
@@ -11,7 +11,7 @@ function AuthorList({authors}) {
             <li key={index} style={styles.authorItem}>
                 <h4>{author.name}</h4>
                 <p>{author.description}</p>
-                <button onClick={() => console.log("bang!")} style={styles.removeButton}>
+                <button onClick={() => handleDelete(author._id)} style={styles.removeButton}>
                 Remove
                 </button>
             </li>

@@ -12,22 +12,28 @@ function SearchBar({ onSubmit }) {
     <>
       <h3>Search Bar</h3>
       <form onSubmit={onSubmit}>
-        <label htmlFor="search">Search:</label>
-        <input
-          type="text"
-          id="search"
-          name="search"
-          value={term}
-          onChange={handleChange}
-        />
+        <label htmlFor="name">Name:</label>
         <input
           type="text"
           id="name"
           name="name"
-        //   value={term}
-        //   onChange={handleChange}
+          value={term}
+          onChange={handleChange}
         />
-        {term.length < 3 && <p>Search term must be at least 3 characters</p>}
+        <label htmlFor="age">Age:</label>
+        <input
+          type="text"
+          id="age"
+          name="age"
+        />
+        <label htmlFor="description">Description:</label>
+        <input
+          type="text"
+          id="description"
+          name="description"
+        />
+        {term.length < 3 && <p>Author name must be at least 3 characters</p>}
+        <br/>
         <button type="submit">Search</button>
       </form>
     </>

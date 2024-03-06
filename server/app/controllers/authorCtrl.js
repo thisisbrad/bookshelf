@@ -4,7 +4,6 @@ const getAuthors = async (req, res) => {
   // console.log("WOW");
   try {
     const authors = await Author.find();
-    // console.log("authors",authors[0])
     res.status(200).json({
       data: authors,
       success: true,

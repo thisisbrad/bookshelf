@@ -26,17 +26,29 @@ function App() {
 
   const handleSearch = async event => {
     event.preventDefault();
-    console.log("Search button clicked!", event.target.search.value);
-    const response = await API.fetchAuthors();
+    const {name, age, description} = event.target
+    console.log("Search button clicked!", name.value);
+    console.log("Search button clicked!", age.value);
+    console.log("Search button clicked!", description.value);
+
+    // console.log("Search button clicked!", event.target);
+    const response = await API.createAuthor({name:name.value, age: age.value, description: description.value});
     // console.log("From our API!", response.data);
-    setAuthors(response.data)
+    // Update author state
+    setAuthors([...authors,response.data])
   };
+
+  const handleDelete = async (id) => {
+    const response = await API.deleteAuthor(id);
+    console.log("removed", response);
+    setAuthors(authors.filter(author => author._id !== response.id));
+  }
 
   return (
     <>
       <h1>Author Search</h1>
       <SearchBar onSubmit={handleSearch} />
-      <AuthorList authors={authors}/>
+      <AuthorList authors={authors} handleDelete={handleDelete}/>
     </>
   );
 }
