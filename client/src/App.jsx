@@ -26,16 +26,17 @@ function App() {
 
   const handleSearch = async event => {
     event.preventDefault();
+    // console.log("WE GO FIRST")
+   
     const {name, age, description} = event.target
-    console.log("Search button clicked!", name.value);
-    console.log("Search button clicked!", age.value);
-    console.log("Search button clicked!", description.value);
-
+    // console.log("Search button clicked!", name.value);
+    // console.log("Search button clicked!", age.value);
+    // console.log("Search button clicked!", description.value);
     // console.log("Search button clicked!", event.target);
-    const response = await API.createAuthor({name:name.value, age: age.value, description: description.value});
-    // console.log("From our API!", response.data);
-    // Update author state
-    setAuthors([...authors,response.data])
+    const response = await API.createAuthor({name : name.value, age: age.value, description: description.value});
+    // // console.log("From our API!", response.data);
+    // // Update author state
+    setAuthors([ ...authors , response.data])
   };
 
   const handleDelete = async (id) => {

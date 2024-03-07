@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-function SearchBar({ onSubmit }) {
+function SearchBar({onSubmit}) {
+  // console.log("props",onSubmit)
   const [term, setTerm] = useState("");
 
   const handleChange = event => {

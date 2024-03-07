@@ -1,7 +1,7 @@
 import "react";
 
 function AuthorList({ authors, handleDelete }) {
-    // console.log("props", props);
+    // console.log("props", authors);
 
   return (
     <>
