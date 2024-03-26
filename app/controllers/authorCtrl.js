@@ -2,7 +2,36 @@ const Author = require("../models/Author");
 const mongoose = require("mongoose");
 
 const getAuthors = async (req, res) => {
-  const authors = await Author.find();
+  // console.log("QUERY STRING", req.query);
+  let query = Author.find(req.query);
+  console.log(">>>", query);
+
+  if (req.query.books) {
+    console.log("here?");
+    query = Author.find().populate("books");
+  }
+
+  if (req.query.select) {
+    const fields = req.query.select.split(",").join(" ");
+    console.log(">>>", fields);
+    query = Author.find({}).select(fields);
+  }
+
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(",").join(" ");
+    console.log(">>>", sortBy);
+    query = Author.find({}).sort(sortBy);
+  }
+
+  if (req.query.sort && req.query.select) {
+    //
+    const fields = req.query.select.split(",").join(" ");
+    const sortBy = req.query.sort.split(",").join(" ");
+    query = Author.find({}).sort(sortBy).select(fields);
+  }
+
+  const authors = await query;
+
   res.status(200).json({
     data: authors,
     success: true,
@@ -12,6 +41,16 @@ const getAuthors = async (req, res) => {
 
 const getAuthorById = async (req, res) => {
   const { id } = req.params;
+
+  let query = Author.findById(id);
+
+  if (req.query.select) {
+    const fields = req.query.select.split(",").join(" ");
+    console.log(">>>", fields);
+    query = Author.findById(id).select(fields);
+  }
+
+  const author = await query;
 
   res.status(200).json({
     data: author,
