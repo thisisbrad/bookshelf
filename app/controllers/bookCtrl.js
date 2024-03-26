@@ -54,19 +54,20 @@ const createBook = async (req, res) => {
     // '648a0bcb7124454bedaa5b97' > is the _id for the author model;
     const user = await Author.findById(book.author);
     // attaching the actual author object to the book
-    // console.log("User from DB", user);
+    console.log("User from DB", user);
+    console.log("Book from request", book);
     book.author = user;
     // // creates a new book model
     const bookData = new Book(book);
     // // push the book id to the user.books array
     user.books.push(bookData._id);
-    console.log("Request body", book);
+    console.log("Request body", bookData);
     // // saves the book and user data
     const queries = [bookData.save(), user.save()];
     await Promise.all(queries);
 
-    // const { author, ...bookOnly } = bookData._doc;
-    // console.log('>>>', bookOnly);
+    const { author, ...bookOnly } = bookData._doc;
+    console.log(">>>", bookOnly);
 
     res.status(200).json({
       data: bookData,

@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const getAuthors = async (req, res) => {
   // console.log("QUERY STRING", req.query);
   let query = Author.find(req.query);
-  console.log(">>>", query);
+  // console.log(">>>", query);
 
   if (req.query.books) {
     console.log("here?");
