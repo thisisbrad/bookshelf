@@ -13,8 +13,25 @@ API.createAuthor = async (author) => {
 };
 
 API.fetchAuthors = async () => {
-  const response = await axios.get(BASE_URL);
-  return response.data;
+  try {
+    const response = await axios.get(BASE_URL);
+    console.log("data from async ", response);
+    return response.data;
+  } catch (error) {
+    console.error("2222", error);
+  }
+  axios
+    .get(BASE_URL)
+    .then(function (response) {
+      // handle success
+      console.log("Promise based", response);
+    })
+    .catch(function (error) {
+      // handle error
+      console.log("ERROR 1", error);
+    });
+  // console.log("Did you get Data?");
+  // return response.data;
 };
 
 API.deleteAuthor = async (id) => {
