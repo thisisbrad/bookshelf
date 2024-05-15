@@ -15,7 +15,7 @@ const authors = [
     Description: "writes books",
   },
 ];
-
+//localhost:3000/api/v1/author/
 router.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -30,7 +30,7 @@ router.get("/:id", (req, res) => {
   res.status(200).json({
     success: true,
     message: `${req.method} - Author request`,
-    // data: authors,
+    data: req.params.id,
   });
 });
 
@@ -54,9 +54,11 @@ router.put("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   //delete the author
-  res
-    .status(200)
-    .json({ success: true, message: `${req.method} - Author request` });
+  res.status(200).json({
+    success: true,
+    message: `${req.method} - Author request`,
+    data: req.params.id,
+  });
 });
 
 module.exports = router;
