@@ -2,33 +2,46 @@ const Author = require("../models/Author");
 const mongoose = require("mongoose");
 
 const getAuthors = async (req, res) => {
-  // console.log("QUERY STRING", req.query);
-  let query = Author.find(req.query);
-  // console.log(">>>", query);
+  console.log("QUERY STRING", req.query);
+  let query = Author.find({});
+
+  let queryString = JSON.stringify(req.query);
+
+  queryString = queryString.replace(
+    /\b(gt|gte|lt|lte)\b/g,
+    (match) => `$${match}`
+  );
+
+  // console.log("queryString", JSON.parse(queryString));
+
+  query = Author.find(JSON.parse(queryString));
 
   if (req.query.books) {
-    console.log("here?");
-    query = Author.find().populate("books");
+    query = Author.find({}).populate("books");
   }
 
   if (req.query.select) {
+    console.log("before >>>", req.query.select);
     const fields = req.query.select.split(",").join(" ");
-    console.log(">>>", fields);
+    console.log("after >>>", fields);
     query = Author.find({}).select(fields);
   }
 
   if (req.query.sort) {
+    console.log("before >>>", req.query.sort);
     const sortBy = req.query.sort.split(",").join(" ");
-    console.log(">>>", sortBy);
+    console.log("after >>>", sortBy);
     query = Author.find({}).sort(sortBy);
   }
 
-  if (req.query.sort && req.query.select) {
-    //
-    const fields = req.query.select.split(",").join(" ");
-    const sortBy = req.query.sort.split(",").join(" ");
-    query = Author.find({}).sort(sortBy).select(fields);
+  if (req.query.page) {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+    query = Author.find({}).skip(skip).limit(limit);
   }
+
+  console.log(">>>", req.query);
 
   const authors = await query;
 
@@ -69,19 +82,20 @@ const createAuthor = async (req, res) => {
       message: `${req.method} - Author request made`,
     });
   } catch (error) {
-    console.error(error);
+    console.log(">>>>>>", error.errors);
     // Check if the error is a Mongoose validation error or a duplicate key error
     if (error instanceof mongoose.Error.ValidationError) {
       const validationErrors = Object.values(error.errors).map(
         (error) => error.message
       );
       console.log("Validation errors:", validationErrors);
-      res.status(422).json({
+      return res.status(422).json({
         success: false,
         error: "Validation failed",
         details: validationErrors,
       });
     }
+
     res.status(500).json({
       success: false,
       error: "Internal Server Error",
