@@ -7,7 +7,9 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/api/v1", routeHandler);
+
 app.use("/*", (req, res) => {
   res.status(404).json({ success: false });
 });
+
 module.exports = app;
