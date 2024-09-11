@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = {};
-const BASE_URL = "http://localhost:3000/api/v1/authors";
+const BASE_URL = "http://localhost:5001/api/v1/authors";
 
 API.createAuthor = async (author) => {
   const response = await axios.post(BASE_URL, { author: author });
