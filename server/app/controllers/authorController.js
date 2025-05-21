@@ -23,8 +23,9 @@ const createAuthor = async (req, res) => {
   try {
     const author = await Author.create(req.body);
     console.log("saved >>>", author);
-    res.status(200).json({
+    res.status(201).json({
       success: true,
+      data: author,
       message: `${req.method} - Author request`,
     });
   } catch (error) {
